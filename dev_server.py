@@ -81,27 +81,27 @@ class RouterHandler(BaseHTTPRequestHandler):
         path = parsed.path
 
         if path in ("/", "/index.html"):
-            return _send_html(self, 200, _read_file(os.path.join(ROOT_DIR, "index.html")))
+            return _send_html(self, 200, _read_file(os.path.join(ROOT_DIR, "public", "index.html")))
 
         if path == "/favicon.svg":
             return _send_bytes(
                 self,
                 200,
-                _read_file(os.path.join(ROOT_DIR, "favicon.svg")),
+                _read_file(os.path.join(ROOT_DIR, "public", "favicon.svg")),
                 "image/svg+xml; charset=utf-8",
             )
 
         if path in ("/docs", "/docs/"):
-            return _send_html(self, 200, _read_file(os.path.join(ROOT_DIR, "docs", "index.html")))
+            return _send_html(self, 200, _read_file(os.path.join(ROOT_DIR, "public", "docs", "index.html")))
 
         if path in ("/docs/playground", "/docs/playground.html"):
-            return _send_html(self, 200, _read_file(os.path.join(ROOT_DIR, "docs", "playground.html")))
+            return _send_html(self, 200, _read_file(os.path.join(ROOT_DIR, "public", "docs", "playground.html")))
 
         if path == "/docs/openapi.json":
             return _send_bytes(
                 self,
                 200,
-                _read_file(os.path.join(ROOT_DIR, "docs", "openapi.json")),
+                _read_file(os.path.join(ROOT_DIR, "public", "docs", "openapi.json")),
                 "application/json; charset=utf-8",
             )
 

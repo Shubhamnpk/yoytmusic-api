@@ -1,7 +1,7 @@
 import json
 from http.server import BaseHTTPRequestHandler
 
-from api.version_info import get_version_payload
+from .version_info import get_version_payload
 
 
 def _json_response(handler, status, payload):

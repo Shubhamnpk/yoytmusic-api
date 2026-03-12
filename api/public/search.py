@@ -1,1 +1,1 @@
-from api.search import handler as handler
+from ..search import handler as handler
