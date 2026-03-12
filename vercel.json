@@ -1,10 +1,21 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    { "source": "/api", "destination": "/api/info" },
-    { "source": "/api/", "destination": "/api/info" },
-    { "source": "/docs/playground", "destination": "/docs/playground.html" },
-    { "source": "/docs", "destination": "/docs/index.html" },
-    { "source": "/docs/", "destination": "/docs/index.html" }
+    {
+      "source": "/docs/playground",
+      "destination": "/docs/playground.html"
+    },
+    {
+      "source": "/docs",
+      "destination": "/docs/index.html"
+    },
+    {
+      "source": "/docs/",
+      "destination": "/docs/index.html"
+    },
+    {
+      "source": "/",
+      "destination": "/index.html"
+    }
   ]
 }
