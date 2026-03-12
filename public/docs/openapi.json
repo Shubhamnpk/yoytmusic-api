@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://YOUR_APP.vercel.app"
+      "url": "https://yoytmusic-api.vercel.app/"
     }
   ],
   "paths": {
@@ -53,14 +53,21 @@
             "name": "q",
             "in": "query",
             "required": true,
-            "schema": {"type": "string"},
+            "schema": {
+              "type": "string"
+            },
             "description": "Search query"
           },
           {
             "name": "limit",
             "in": "query",
             "required": false,
-            "schema": {"type": "integer", "default": 10, "minimum": 1, "maximum": 25},
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 25
+            },
             "description": "Result limit (clamped 1-25)"
           },
           {
@@ -69,7 +76,13 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["songs", "videos", "albums", "artists", "playlists"]
+              "enum": [
+                "songs",
+                "videos",
+                "albums",
+                "artists",
+                "playlists"
+              ]
             },
             "description": "Search filter"
           }
@@ -79,7 +92,9 @@
             "description": "Search results",
             "content": {
               "application/json": {
-                "schema": {"$ref": "#/components/schemas/SearchResponse"}
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
               }
             }
           },
@@ -87,7 +102,9 @@
             "description": "Validation error",
             "content": {
               "application/json": {
-                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
               }
             }
           },
@@ -95,7 +112,9 @@
             "description": "Upstream failure",
             "content": {
               "application/json": {
-                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
               }
             }
           }
@@ -110,21 +129,27 @@
             "name": "method",
             "in": "query",
             "required": true,
-            "schema": {"type": "string"},
+            "schema": {
+              "type": "string"
+            },
             "description": "Allowlisted method name"
           },
           {
             "name": "args",
             "in": "query",
             "required": false,
-            "schema": {"type": "string"},
+            "schema": {
+              "type": "string"
+            },
             "description": "JSON-encoded array of positional args"
           },
           {
             "name": "kwargs",
             "in": "query",
             "required": false,
-            "schema": {"type": "string"},
+            "schema": {
+              "type": "string"
+            },
             "description": "JSON-encoded object of keyword args"
           }
         ],
@@ -133,7 +158,9 @@
             "description": "Method result",
             "content": {
               "application/json": {
-                "schema": {"$ref": "#/components/schemas/MethodResponse"}
+                "schema": {
+                  "$ref": "#/components/schemas/MethodResponse"
+                }
               }
             }
           },
@@ -141,7 +168,9 @@
             "description": "Validation error",
             "content": {
               "application/json": {
-                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
               }
             }
           },
@@ -149,7 +178,9 @@
             "description": "Upstream failure",
             "content": {
               "application/json": {
-                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
               }
             }
           }
@@ -161,7 +192,9 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {"$ref": "#/components/schemas/MethodRequest"}
+              "schema": {
+                "$ref": "#/components/schemas/MethodRequest"
+              }
             }
           }
         },
@@ -170,7 +203,9 @@
             "description": "Method result",
             "content": {
               "application/json": {
-                "schema": {"$ref": "#/components/schemas/MethodResponse"}
+                "schema": {
+                  "$ref": "#/components/schemas/MethodResponse"
+                }
               }
             }
           },
@@ -178,7 +213,9 @@
             "description": "Validation error",
             "content": {
               "application/json": {
-                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
               }
             }
           },
@@ -186,7 +223,9 @@
             "description": "Upstream failure",
             "content": {
               "application/json": {
-                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
               }
             }
           }
@@ -201,7 +240,9 @@
             "description": "Authentication required",
             "content": {
               "application/json": {
-                "schema": {"$ref": "#/components/schemas/AuthRequiredResponse"}
+                "schema": {
+                  "$ref": "#/components/schemas/AuthRequiredResponse"
+                }
               }
             }
           }
@@ -214,7 +255,9 @@
             "description": "Authentication required",
             "content": {
               "application/json": {
-                "schema": {"$ref": "#/components/schemas/AuthRequiredResponse"}
+                "schema": {
+                  "$ref": "#/components/schemas/AuthRequiredResponse"
+                }
               }
             }
           }
@@ -226,14 +269,44 @@
         "summary": "Legacy public search",
         "deprecated": true,
         "parameters": [
-          {"name": "q", "in": "query", "required": true, "schema": {"type": "string"}},
-          {"name": "limit", "in": "query", "required": false, "schema": {"type": "integer", "default": 10, "minimum": 1, "maximum": 25}},
-          {"name": "filter", "in": "query", "required": false, "schema": {"type": "string"}}
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "minimum": 1,
+              "maximum": 25
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {
             "description": "Search results",
-            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/SearchResponse"}}}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -243,14 +316,41 @@
         "summary": "Legacy public method call (GET)",
         "deprecated": true,
         "parameters": [
-          {"name": "method", "in": "query", "required": true, "schema": {"type": "string"}},
-          {"name": "args", "in": "query", "required": false, "schema": {"type": "string"}},
-          {"name": "kwargs", "in": "query", "required": false, "schema": {"type": "string"}}
+          {
+            "name": "method",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "args",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "kwargs",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
         ],
         "responses": {
           "200": {
             "description": "Method result",
-            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/MethodResponse"}}}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MethodResponse"
+                }
+              }
+            }
           }
         }
       },
@@ -261,14 +361,22 @@
           "required": true,
           "content": {
             "application/json": {
-              "schema": {"$ref": "#/components/schemas/MethodRequest"}
+              "schema": {
+                "$ref": "#/components/schemas/MethodRequest"
+              }
             }
           }
         },
         "responses": {
           "200": {
             "description": "Method result",
-            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/MethodResponse"}}}
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MethodResponse"
+                }
+              }
+            }
           }
         }
       }
@@ -278,61 +386,136 @@
     "schemas": {
       "HealthResponse": {
         "type": "object",
-        "properties": {"ok": {"type": "boolean"}},
-        "required": ["ok"]
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "ok"
+        ]
       },
       "VersionResponse": {
         "type": "object",
         "properties": {
-          "app_version": {"type": "string"},
-          "ytmusicapi_version": {"type": ["string", "null"]},
-          "build_time": {"type": ["string", "null"], "description": "ISO-8601 timestamp if provided"}
+          "app_version": {
+            "type": "string"
+          },
+          "ytmusicapi_version": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "build_time": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "ISO-8601 timestamp if provided"
+          }
         },
-        "required": ["app_version", "ytmusicapi_version", "build_time"]
+        "required": [
+          "app_version",
+          "ytmusicapi_version",
+          "build_time"
+        ]
       },
       "SearchResponse": {
         "type": "object",
         "properties": {
-          "query": {"type": "string"},
-          "count": {"type": "integer"},
-          "items": {"type": "array", "items": {"type": "object", "additionalProperties": true}}
+          "query": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
         },
-        "required": ["query", "count", "items"]
+        "required": [
+          "query",
+          "count",
+          "items"
+        ]
       },
       "MethodRequest": {
         "type": "object",
         "properties": {
-          "method": {"type": "string"},
-          "args": {"type": "array", "items": {}},
-          "kwargs": {"type": "object", "additionalProperties": true}
+          "method": {
+            "type": "string"
+          },
+          "args": {
+            "type": "array",
+            "items": {}
+          },
+          "kwargs": {
+            "type": "object",
+            "additionalProperties": true
+          }
         },
-        "required": ["method"]
+        "required": [
+          "method"
+        ]
       },
       "MethodResponse": {
         "type": "object",
         "properties": {
-          "method": {"type": "string"},
-          "result": {"type": "object", "additionalProperties": true}
+          "method": {
+            "type": "string"
+          },
+          "result": {
+            "type": "object",
+            "additionalProperties": true
+          }
         },
-        "required": ["method", "result"]
+        "required": [
+          "method",
+          "result"
+        ]
       },
       "ErrorResponse": {
         "type": "object",
         "properties": {
-          "error": {"type": "string"},
-          "detail": {"type": "string"},
-          "allowed_methods": {"type": "array", "items": {"type": "string"}}
+          "error": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "allowed_methods": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
         },
-        "required": ["error"]
+        "required": [
+          "error"
+        ]
       },
       "AuthRequiredResponse": {
         "type": "object",
         "properties": {
-          "error": {"type": "string"},
-          "detail": {"type": "string"},
-          "auth_required": {"type": "boolean"}
+          "error": {
+            "type": "string"
+          },
+          "detail": {
+            "type": "string"
+          },
+          "auth_required": {
+            "type": "boolean"
+          }
         },
-        "required": ["error", "auth_required"]
+        "required": [
+          "error",
+          "auth_required"
+        ]
       }
     }
   }
