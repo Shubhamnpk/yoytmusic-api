@@ -161,14 +161,18 @@ class handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         parsed = urlparse(self.path)
-        path = parsed.path.rstrip("/") or "/api"
+        path = parsed.path
+        if len(path) > 1:
+            path = path.rstrip("/")
         params = parse_qs(parsed.query)
 
         route = _GET_ROUTES.get(path)
         if route:
             return route(self, params)
 
-        _json_response(self, 404, {"error": "Not found"})
+        # If not an API route, send 404 so Vercel can try static files
+        self.send_response(404)
+        self.end_headers()
 
     def do_POST(self):
         parsed = urlparse(self.path)
