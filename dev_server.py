@@ -105,6 +105,25 @@ class RouterHandler(BaseHTTPRequestHandler):
                 "application/json; charset=utf-8",
             )
 
+        if path in ("/api", "/api/"):
+            return _send_json(
+                self,
+                200,
+                {
+                    "name": "yoytmusic-api",
+                    "status": "ok",
+                    "version": get_version_payload(),
+                    "endpoints": {
+                        "health": "/api/health",
+                        "version": "/api/version",
+                        "public_search": "/api/public/search",
+                        "public_method": "/api/public/ytmusic",
+                        "auth_method": "/api/auth/ytmusic",
+                        "openapi": "/docs/openapi.json",
+                    },
+                },
+            )
+
         if path == "/api/health":
             return _send_json(self, 200, {"ok": True})
 
