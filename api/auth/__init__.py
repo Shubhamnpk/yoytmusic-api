@@ -1,0 +1,1 @@
+"""Authenticated endpoints (OAuth planned)."""

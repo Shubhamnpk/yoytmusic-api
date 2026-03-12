@@ -1,0 +1,339 @@
+﻿{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "YTMusic API",
+    "version": "0.1.0",
+    "description": "HTTP wrapper around ytmusicapi with public and auth-separated endpoints."
+  },
+  "servers": [
+    {
+      "url": "https://YOUR_APP.vercel.app"
+    }
+  ],
+  "paths": {
+    "/api/health": {
+      "get": {
+        "summary": "Health check",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/version": {
+      "get": {
+        "summary": "Version metadata",
+        "responses": {
+          "200": {
+            "description": "Version info",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VersionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/search": {
+      "get": {
+        "summary": "Search public catalog",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Search query"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "integer", "default": 10, "minimum": 1, "maximum": 25},
+            "description": "Result limit (clamped 1-25)"
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": ["songs", "videos", "albums", "artists", "playlists"]
+            },
+            "description": "Search filter"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/SearchResponse"}
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+              }
+            }
+          },
+          "500": {
+            "description": "Upstream failure",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/ytmusic": {
+      "get": {
+        "summary": "Call allowlisted public ytmusicapi method (GET)",
+        "parameters": [
+          {
+            "name": "method",
+            "in": "query",
+            "required": true,
+            "schema": {"type": "string"},
+            "description": "Allowlisted method name"
+          },
+          {
+            "name": "args",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string"},
+            "description": "JSON-encoded array of positional args"
+          },
+          {
+            "name": "kwargs",
+            "in": "query",
+            "required": false,
+            "schema": {"type": "string"},
+            "description": "JSON-encoded object of keyword args"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Method result",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/MethodResponse"}
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+              }
+            }
+          },
+          "500": {
+            "description": "Upstream failure",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Call allowlisted public ytmusicapi method (POST)",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/MethodRequest"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Method result",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/MethodResponse"}
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+              }
+            }
+          },
+          "500": {
+            "description": "Upstream failure",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/ErrorResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/ytmusic": {
+      "get": {
+        "summary": "Auth-protected ytmusicapi methods (OAuth required)",
+        "responses": {
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/AuthRequiredResponse"}
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Auth-protected ytmusicapi methods (OAuth required)",
+        "responses": {
+          "401": {
+            "description": "Authentication required",
+            "content": {
+              "application/json": {
+                "schema": {"$ref": "#/components/schemas/AuthRequiredResponse"}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/search": {
+      "get": {
+        "summary": "Legacy public search",
+        "deprecated": true,
+        "parameters": [
+          {"name": "q", "in": "query", "required": true, "schema": {"type": "string"}},
+          {"name": "limit", "in": "query", "required": false, "schema": {"type": "integer", "default": 10, "minimum": 1, "maximum": 25}},
+          {"name": "filter", "in": "query", "required": false, "schema": {"type": "string"}}
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/SearchResponse"}}}
+          }
+        }
+      }
+    },
+    "/api/ytmusic": {
+      "get": {
+        "summary": "Legacy public method call (GET)",
+        "deprecated": true,
+        "parameters": [
+          {"name": "method", "in": "query", "required": true, "schema": {"type": "string"}},
+          {"name": "args", "in": "query", "required": false, "schema": {"type": "string"}},
+          {"name": "kwargs", "in": "query", "required": false, "schema": {"type": "string"}}
+        ],
+        "responses": {
+          "200": {
+            "description": "Method result",
+            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/MethodResponse"}}}
+          }
+        }
+      },
+      "post": {
+        "summary": "Legacy public method call (POST)",
+        "deprecated": true,
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {"$ref": "#/components/schemas/MethodRequest"}
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Method result",
+            "content": {"application/json": {"schema": {"$ref": "#/components/schemas/MethodResponse"}}}
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HealthResponse": {
+        "type": "object",
+        "properties": {"ok": {"type": "boolean"}},
+        "required": ["ok"]
+      },
+      "VersionResponse": {
+        "type": "object",
+        "properties": {
+          "app_version": {"type": "string"},
+          "ytmusicapi_version": {"type": ["string", "null"]},
+          "build_time": {"type": ["string", "null"], "description": "ISO-8601 timestamp if provided"}
+        },
+        "required": ["app_version", "ytmusicapi_version", "build_time"]
+      },
+      "SearchResponse": {
+        "type": "object",
+        "properties": {
+          "query": {"type": "string"},
+          "count": {"type": "integer"},
+          "items": {"type": "array", "items": {"type": "object", "additionalProperties": true}}
+        },
+        "required": ["query", "count", "items"]
+      },
+      "MethodRequest": {
+        "type": "object",
+        "properties": {
+          "method": {"type": "string"},
+          "args": {"type": "array", "items": {}},
+          "kwargs": {"type": "object", "additionalProperties": true}
+        },
+        "required": ["method"]
+      },
+      "MethodResponse": {
+        "type": "object",
+        "properties": {
+          "method": {"type": "string"},
+          "result": {"type": "object", "additionalProperties": true}
+        },
+        "required": ["method", "result"]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": {"type": "string"},
+          "detail": {"type": "string"},
+          "allowed_methods": {"type": "array", "items": {"type": "string"}}
+        },
+        "required": ["error"]
+      },
+      "AuthRequiredResponse": {
+        "type": "object",
+        "properties": {
+          "error": {"type": "string"},
+          "detail": {"type": "string"},
+          "auth_required": {"type": "boolean"}
+        },
+        "required": ["error", "auth_required"]
+      }
+    }
+  }
+}

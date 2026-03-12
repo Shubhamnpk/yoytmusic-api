@@ -1,0 +1,26 @@
+import json
+from http.server import BaseHTTPRequestHandler
+
+
+def _json_response(handler, status, payload):
+    body = json.dumps(payload).encode("utf-8")
+    handler.send_response(status)
+    handler.send_header("Content-Type", "application/json; charset=utf-8")
+    handler.send_header("Content-Length", str(len(body)))
+    handler.send_header("Access-Control-Allow-Origin", "*")
+    handler.send_header("Access-Control-Allow-Methods", "GET, OPTIONS")
+    handler.send_header("Access-Control-Allow-Headers", "Content-Type")
+    handler.end_headers()
+    handler.wfile.write(body)
+
+
+class handler(BaseHTTPRequestHandler):
+    def do_OPTIONS(self):
+        self.send_response(204)
+        self.send_header("Access-Control-Allow-Origin", "*")
+        self.send_header("Access-Control-Allow-Methods", "GET, OPTIONS")
+        self.send_header("Access-Control-Allow-Headers", "Content-Type")
+        self.end_headers()
+
+    def do_GET(self):
+        _json_response(self, 200, {"ok": True})

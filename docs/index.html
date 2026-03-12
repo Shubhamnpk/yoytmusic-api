@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YTMusic API Docs</title>
+  <meta name="description" content="HTTP documentation for the YTMusic API wrapper." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0c12;
+      --bg-2: #131825;
+      --ink: #f4f5f7;
+      --muted: #a2abbc;
+      --accent: #7bdff2;
+      --accent-2: #f8cdda;
+      --card: rgba(19, 24, 37, 0.9);
+      --stroke: rgba(255, 255, 255, 0.08);
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(900px 600px at 85% -10%, rgba(123, 223, 242, 0.2), transparent 60%),
+        radial-gradient(700px 500px at 10% 0%, rgba(248, 205, 218, 0.18), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 13px;
+      color: var(--accent);
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 14px;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+
+    nav a:hover {
+      color: var(--ink);
+      border-color: var(--accent);
+    }
+
+    h1, h2 {
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      margin: 0 0 12px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 4vw, 48px);
+    }
+
+    h2 {
+      font-size: 22px;
+      margin-top: 28px;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 0 0 16px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      margin-bottom: 20px;
+    }
+
+    code {
+      background: rgba(255, 255, 255, 0.07);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 13px;
+      color: #bdefff;
+    }
+
+    pre {
+      background: rgba(9, 12, 20, 0.9);
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      padding: 16px;
+      overflow: auto;
+      margin: 0;
+      color: #cfeeff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      font-size: 14px;
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--stroke);
+      padding: 10px 8px;
+      text-align: left;
+    }
+
+    th {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-right: 8px;
+    }
+
+    .footer {
+      margin-top: 48px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">YTMusic API Docs</div>
+      <nav>
+        <a href="#overview">Overview</a>
+        <a href="#endpoints">Endpoints</a>
+        <a href="#examples">Examples</a>
+        <a href="#openapi">OpenAPI</a>
+        <a href="#errors">Errors</a>
+        <a href="/">Landing</a>
+      </nav>
+    </header>
+
+    <section id="overview" class="card">
+      <div class="pill">Read Only</div>
+      <div class="pill">Public + Auth</div>
+      <h1>HTTP docs for the YTMusic API wrapper.</h1>
+      <p>This API exposes public YouTube Music data through simple HTTP endpoints built on top of <code>ytmusicapi</code>. Public endpoints live under <code>/api/public</code>. Auth-required endpoints live under <code>/api/auth</code> and return <code>401</code> until OAuth is enabled.</p>
+      <p>Base URL: <code>https://YOUR_APP.vercel.app</code></p>
+    </section>
+
+    <section id="endpoints" class="card">
+      <h2>Endpoints</h2>
+      <p><code>GET /api/health</code></p>
+      <pre><code>{"ok": true}</code></pre>
+
+      <p><code>GET /api/version</code></p>
+      <pre><code>{"app_version":"0.1.0","ytmusicapi_version":"...","build_time":"..."}</code></pre>
+
+      <h2>Search</h2>
+      <p><code>GET /api/public/search</code></p>
+      <table>
+        <thead>
+          <tr>
+            <th>Param</th>
+            <th>Type</th>
+            <th>Required</th>
+            <th>Default</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>q</code></td>
+            <td>string</td>
+            <td>Yes</td>
+            <td>-</td>
+            <td>Search query</td>
+          </tr>
+          <tr>
+            <td><code>limit</code></td>
+            <td>int</td>
+            <td>No</td>
+            <td>10</td>
+            <td>Clamped between 1 and 25</td>
+          </tr>
+          <tr>
+            <td><code>filter</code></td>
+            <td>string</td>
+            <td>No</td>
+            <td>null</td>
+            <td>songs, videos, albums, artists, playlists</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>Generic Method</h2>
+      <p><code>GET /api/public/ytmusic</code></p>
+      <table>
+        <thead>
+          <tr>
+            <th>Param</th>
+            <th>Type</th>
+            <th>Required</th>
+            <th>Default</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>method</code></td>
+            <td>string</td>
+            <td>Yes</td>
+            <td>-</td>
+            <td>Must be in allowlist</td>
+          </tr>
+          <tr>
+            <td><code>args</code></td>
+            <td>JSON array</td>
+            <td>No</td>
+            <td>[]</td>
+            <td>Positional args for the method</td>
+          </tr>
+          <tr>
+            <td><code>kwargs</code></td>
+            <td>JSON object</td>
+            <td>No</td>
+            <td>{}</td>
+            <td>Keyword args for the method</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <p><code>POST /api/public/ytmusic</code> accepts the same fields in a JSON body.</p>
+      <p><code>/api/auth/ytmusic</code> is reserved for OAuth-protected methods and returns <code>401</code> until enabled.</p>
+      <p>Legacy endpoints: <code>/api/search</code> and <code>/api/ytmusic</code> remain for backward compatibility.</p>
+    </section>
+
+    <section id="examples" class="card">
+      <h2>Examples</h2>
+      <p>Search request:</p>
+      <pre><code>curl "https://YOUR_APP.vercel.app/api/public/search?q=Oasis&amp;limit=5&amp;filter=songs"</code></pre>
+
+      <p>Get song details (POST):</p>
+      <pre><code>{
+  "method": "get_song",
+  "args": ["VIDEO_ID"],
+  "kwargs": {}
+}</code></pre>
+
+      <p>Generic method (GET):</p>
+      <pre><code>/api/public/ytmusic?method=get_playlist&amp;args=["PLAYLIST_ID"]</code></pre>
+    </section>
+
+    <section id="openapi" class="card">
+      <h2>OpenAPI Spec</h2>
+      <p>Download the OpenAPI file to generate SDKs or explore in tooling like Swagger UI:</p>
+      <pre><code>/docs/openapi.json</code></pre>
+    </section>
+
+    <section id="errors" class="card">
+      <h2>Error Format</h2>
+      <pre><code>{
+  "error": "...",
+  "detail": "...",
+  "allowed_methods": ["..."]
+}</code></pre>
+      <p>Validation errors return HTTP 400. Server or upstream failures return HTTP 500.</p>
+    </section>
+
+    <section class="card">
+      <h2>Allowed Methods</h2>
+      <p><code>search</code> <code>get_song</code> <code>get_album</code> <code>get_artist</code> <code>get_artist_albums</code></p>
+      <p><code>get_artist_singles</code> <code>get_artist_videos</code> <code>get_artist_playlists</code> <code>get_artist_related</code></p>
+      <p><code>get_playlist</code> <code>get_watch_playlist</code> <code>get_lyrics</code> <code>get_home</code> <code>get_explore</code></p>
+      <p><code>get_new_releases</code> <code>get_charts</code> <code>get_mood_categories</code> <code>get_mood_playlists</code></p>
+    </section>
+
+    <section class="card">
+      <h2>Notes</h2>
+      <p>CORS is enabled with <code>Access-Control-Allow-Origin: *</code>.</p>
+      <p>Search results are clamped to a maximum of 25 items per request.</p>
+      <p>This API is read-only. Authenticated features require OAuth support.</p>
+    </section>
+
+    <div class="footer">Need auth or uploads? Add OAuth support and enable protected methods.</div>
+  </div>
+</body>
+</html>

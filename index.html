@@ -1,0 +1,904 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YTMusic API Wrapper</title>
+  <meta name="description" content="Serverless HTTP wrapper for ytmusicapi with public endpoints." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f1117;
+      --bg-2: #151824;
+      --ink: #f2f4f8;
+      --muted: #a9b0bf;
+      --accent: #ff8a3d;
+      --accent-2: #ffd166;
+      --accent-3: #7bdff2;
+      --card: rgba(21, 24, 36, 0.86);
+      --stroke: rgba(255, 255, 255, 0.08);
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+      --danger: #ff6b6b;
+      --success: #5eead4;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(255, 138, 61, 0.22), transparent 60%),
+        radial-gradient(900px 500px at 90% 10%, rgba(123, 223, 242, 0.16), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 48px;
+      animation: fadeIn 0.7s ease both;
+    }
+
+    .logo {
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      font-size: 14px;
+      color: var(--accent-2);
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 14px;
+    }
+
+    nav a {
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+
+    nav a:hover {
+      color: var(--ink);
+      border-color: var(--accent-3);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 32px;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    h1 {
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      font-size: clamp(32px, 5vw, 58px);
+      line-height: 1.05;
+      margin: 0 0 16px;
+    }
+
+    h2 {
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      font-size: 24px;
+      margin: 0 0 16px;
+    }
+
+    p {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: 1px solid var(--stroke);
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 600;
+      background: linear-gradient(135deg, rgba(255, 138, 61, 0.2), rgba(255, 209, 102, 0.18));
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255, 138, 61, 0.6);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.4);
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(6px);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 20px;
+    }
+
+    .stat {
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent-3);
+    }
+
+    .section {
+      margin-top: 40px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    code {
+      background: rgba(255, 255, 255, 0.06);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 13px;
+      color: #f9d98c;
+    }
+
+    pre {
+      margin: 0;
+      background: rgba(9, 11, 17, 0.8);
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      padding: 16px;
+      overflow: auto;
+    }
+
+    input, button, select {
+      font-family: inherit;
+    }
+
+    .field {
+      display: grid;
+      gap: 10px;
+    }
+
+    .input, .select {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--stroke);
+      background: rgba(10, 12, 20, 0.85);
+      color: var(--ink);
+    }
+
+    .input::placeholder {
+      color: #79839a;
+    }
+
+    .btn.action {
+      background: linear-gradient(135deg, rgba(123, 223, 242, 0.2), rgba(255, 138, 61, 0.18));
+      border-color: rgba(123, 223, 242, 0.45);
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      min-height: 22px;
+    }
+
+    .status .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+
+    .status.loading .dot {
+      background: var(--accent-3);
+      box-shadow: 0 0 12px rgba(123, 223, 242, 0.6);
+      animation: pulse 1.4s infinite ease-in-out;
+    }
+
+    .status.error {
+      color: var(--danger);
+    }
+
+    .status.success {
+      color: var(--success);
+    }
+
+    .demo-grid {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) 2fr;
+      gap: 20px;
+    }
+
+    .player {
+      background: rgba(11, 14, 22, 0.85);
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+
+    .player-body {
+      position: relative;
+      background: #000;
+    }
+
+    .player-frame {
+      width: 100%;
+      height: 260px;
+      border: 0;
+      display: none;
+    }
+
+    .player-empty {
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+      padding: 56px 16px;
+    }
+
+    .player-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      background: rgba(9, 11, 17, 0.7);
+      border-top: 1px solid var(--stroke);
+    }
+
+    .player-title {
+      margin: 0;
+      font-weight: 600;
+      font-size: 15px;
+    }
+
+    .controls {
+      display: grid;
+      gap: 14px;
+    }
+
+    .controls .row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+    }
+
+    .toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .toggle input {
+      accent-color: var(--accent-3);
+    }
+
+    .results {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      min-height: 220px;
+    }
+
+    .result-card {
+      background: rgba(11, 14, 22, 0.8);
+      border: 1px solid var(--stroke);
+      border-radius: 16px;
+      padding: 12px;
+      display: grid;
+      gap: 10px;
+      animation: floatUp 0.4s ease both;
+    }
+
+    .result-card.clickable {
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .result-card.clickable:hover {
+      transform: translateY(-2px);
+      border-color: rgba(123, 223, 242, 0.45);
+    }
+
+    .result-thumb {
+      width: 100%;
+      aspect-ratio: 1.6 / 1;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.06);
+      object-fit: cover;
+    }
+
+    .result-title {
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      font-weight: 600;
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .result-sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .result-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      border: 1px solid var(--stroke);
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 11px;
+      color: var(--accent-2);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .link {
+      color: var(--accent-3);
+      text-decoration: none;
+      font-size: 13px;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+
+    .action-link {
+      background: none;
+      border: 0;
+      padding: 0;
+      color: var(--accent-3);
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .action-link:hover {
+      text-decoration: underline;
+    }
+
+    .empty {
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+      padding: 40px 12px;
+    }
+
+    .footer {
+      margin-top: 56px;
+      color: var(--muted);
+      font-size: 14px;
+      text-align: center;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes floatUp {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.6; }
+    }
+
+    @media (max-width: 900px) {
+      .demo-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      header { flex-direction: column; align-items: flex-start; }
+      .actions { width: 100%; }
+      .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body data-repo="">
+  <div class="wrap">
+    <header>
+      <div class="logo">YTMusic API Wrapper</div>
+      <nav>
+        <a href="#features">Features</a>
+        <a href="#endpoints">Endpoints</a>
+        <a href="#demo">Demo</a>
+        <a href="/docs/">Docs</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div>
+        <div class="pill">Read Only</div>
+        <h1>Turn YouTube Music data into clean HTTP endpoints.</h1>
+        <p>Deploy on Vercel in one click. Query search, metadata, charts, and playlists. Designed for serverless, with CORS enabled.</p>
+        <div class="actions">
+          <a class="btn" id="deploy-link" href="https://vercel.com/new/clone?repository-url=YOUR_REPO_URL" target="_blank" rel="noreferrer">Deploy to Vercel</a>
+          <a class="btn secondary" href="/docs/">Read the Docs</a>
+        </div>
+        <p class="muted">Set your repo URL by editing <code>data-repo</code> on <code>&lt;body&gt;</code>.</p>
+      </div>
+      <div class="card">
+        <h2>Quick Start</h2>
+        <p>Call the API from any app.</p>
+        <pre><code>curl "https://YOUR_APP.vercel.app/api/search?q=Oasis&amp;limit=5&amp;filter=songs"</code></pre>
+      </div>
+    </section>
+
+    <section class="grid" id="features">
+      <div class="card">
+        <div class="stat">18</div>
+        <p>Public read-only methods exposed without auth.</p>
+      </div>
+      <div class="card">
+        <div class="stat">1</div>
+        <p>Generic endpoint for all allowed methods.</p>
+      </div>
+      <div class="card">
+        <div class="stat">0</div>
+        <p>Config required for a basic deploy.</p>
+      </div>
+    </section>
+
+    <section class="section" id="endpoints">
+      <h2>Endpoints</h2>
+      <div class="grid">
+        <div class="card">
+          <p><code>GET /api/health</code></p>
+          <p>Simple uptime check.</p>
+        </div>
+        <div class="card">
+          <p><code>GET /api/search</code></p>
+          <p>Params: <code>q</code> (required), <code>limit</code> (1-25), <code>filter</code>.</p>
+        </div>
+        <div class="card">
+          <p><code>GET /api/ytmusic</code></p>
+          <p>Params: <code>method</code>, <code>args</code>, <code>kwargs</code>.</p>
+        </div>
+        <div class="card">
+          <p><code>POST /api/ytmusic</code></p>
+          <p>JSON body with <code>method</code>, <code>args</code>, <code>kwargs</code>.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="demo">
+      <h2>Live Search Demo</h2>
+      <div class="demo-grid">
+        <div class="card">
+          <form id="demo-form" class="controls">
+            <div class="field">
+              <label for="base-url">Base URL</label>
+              <input id="base-url" class="input" placeholder="https://YOUR_APP.vercel.app" />
+            </div>
+            <div class="field">
+              <label for="query">Search Query</label>
+              <input id="query" class="input" placeholder="Oasis" value="Oasis" />
+            </div>
+            <div class="row">
+              <div class="field">
+                <label for="filter">Filter</label>
+                <select id="filter" class="select">
+                  <option value="">All</option>
+                  <option value="songs">Songs</option>
+                  <option value="videos">Videos</option>
+                  <option value="albums">Albums</option>
+                  <option value="artists">Artists</option>
+                  <option value="playlists">Playlists</option>
+                </select>
+              </div>
+              <div class="field">
+                <label for="limit">Limit</label>
+                <select id="limit" class="select">
+                  <option value="5">5</option>
+                  <option value="10" selected>10</option>
+                  <option value="15">15</option>
+                  <option value="20">20</option>
+                  <option value="25">25</option>
+                </select>
+              </div>
+            </div>
+            <label class="toggle">
+              <input id="auto-search" type="checkbox" checked />
+              Auto search while typing
+            </label>
+            <label class="toggle">
+              <input id="stream-results" type="checkbox" checked />
+              Stream results into the grid
+            </label>
+            <button class="btn action" type="submit">Run Search</button>
+            <div id="status" class="status" aria-live="polite">
+              <span class="dot"></span>
+              Ready.
+            </div>
+          </form>
+        </div>
+        <div class="card">
+          <div class="player">
+            <div class="player-body">
+              <div id="player-empty" class="player-empty">Select a track to play.</div>
+              <iframe
+                id="player-frame"
+                class="player-frame"
+                title="YouTube player"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              ></iframe>
+            </div>
+            <div class="player-meta">
+              <p id="player-title" class="player-title">Nothing playing</p>
+              <a id="player-link" class="link" href="#" target="_blank" rel="noreferrer" style="display:none;">Open</a>
+            </div>
+          </div>
+          <div id="results" class="results">
+            <div class="empty">Search to see results.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>How It Works</h2>
+      <div class="grid">
+        <div class="card">
+          <p>Serverless functions in <code>api/</code> call <code>ytmusicapi</code>.</p>
+        </div>
+        <div class="card">
+          <p>CORS is enabled so any browser app can call the endpoints.</p>
+        </div>
+        <div class="card">
+          <p>Upgrade later with OAuth to access library, playlists, and uploads.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">Built on top of ytmusicapi. HTTPS recommended. Auth can be added when needed.</div>
+  </div>
+
+  <script>
+    const deployLink = document.getElementById("deploy-link");
+    const repo = document.body.dataset.repo;
+    if (repo) {
+      deployLink.href = `https://vercel.com/new/clone?repository-url=${encodeURIComponent(repo)}`;
+    }
+
+    const baseInput = document.getElementById("base-url");
+    if (window.location.protocol !== "file:") {
+      baseInput.value = window.location.origin;
+    }
+
+    const form = document.getElementById("demo-form");
+    const queryInput = document.getElementById("query");
+    const filterInput = document.getElementById("filter");
+    const limitInput = document.getElementById("limit");
+    const autoSearch = document.getElementById("auto-search");
+    const streamResults = document.getElementById("stream-results");
+    const results = document.getElementById("results");
+    const status = document.getElementById("status");
+    const playerFrame = document.getElementById("player-frame");
+    const playerTitle = document.getElementById("player-title");
+    const playerLink = document.getElementById("player-link");
+    const playerEmpty = document.getElementById("player-empty");
+
+    let debounceTimer = null;
+    let requestToken = 0;
+    let currentVideoId = null;
+
+    function setStatus(text, mode) {
+      status.classList.remove("loading", "error", "success");
+      if (mode) {
+        status.classList.add(mode);
+      }
+      status.lastChild.textContent = text;
+    }
+
+    function clearResults(message) {
+      results.innerHTML = "";
+      const empty = document.createElement("div");
+      empty.className = "empty";
+      empty.textContent = message;
+      results.appendChild(empty);
+    }
+
+    function setPlayer(item) {
+      if (!item || !item.videoId) {
+        currentVideoId = null;
+        playerFrame.src = "";
+        playerFrame.style.display = "none";
+        playerEmpty.style.display = "block";
+        playerTitle.textContent = "Select a track to play";
+        playerLink.style.display = "none";
+        playerLink.href = "#";
+        return;
+      }
+
+      if (currentVideoId === item.videoId) {
+        return;
+      }
+
+      currentVideoId = item.videoId;
+      playerFrame.src = `https://www.youtube.com/embed/${encodeURIComponent(item.videoId)}?autoplay=1&rel=0`;
+      playerFrame.style.display = "block";
+      playerEmpty.style.display = "none";
+      playerTitle.textContent = item.title || "Now Playing";
+      playerLink.href = `https://music.youtube.com/watch?v=${item.videoId}`;
+      playerLink.style.display = "inline";
+    }
+
+    function pickThumbnail(item) {
+      const candidates = [
+        item.thumbnails,
+        item.thumbnail,
+        item.album && item.album.thumbnails,
+        item.artist && item.artist.thumbnails,
+      ];
+      for (const list of candidates) {
+        if (Array.isArray(list) && list.length) {
+          return list[list.length - 1].url || list[list.length - 1].url?.url;
+        }
+      }
+      return "";
+    }
+
+    function joinArtists(item) {
+      if (Array.isArray(item.artists)) {
+        return item.artists.map((artist) => artist.name).filter(Boolean).join(", ");
+      }
+      if (item.artist && item.artist.name) {
+        return item.artist.name;
+      }
+      return "";
+    }
+
+    function getSubtitle(item) {
+      const artistNames = joinArtists(item);
+      if (artistNames) {
+        return artistNames;
+      }
+      if (item.author) {
+        return item.author;
+      }
+      if (item.album && item.album.name) {
+        return item.album.name;
+      }
+      return item.category || item.resultType || "";
+    }
+
+    function getTags(item) {
+      const tags = [];
+      if (item.resultType) tags.push(item.resultType);
+      if (item.category) tags.push(item.category);
+      if (item.duration) tags.push(item.duration);
+      if (item.year) tags.push(String(item.year));
+      if (item.playlistId) tags.push("playlist");
+      return tags.filter(Boolean);
+    }
+
+    function buildLink(item) {
+      if (item.videoId) {
+        return `https://music.youtube.com/watch?v=${item.videoId}`;
+      }
+      if (item.playlistId) {
+        return `https://music.youtube.com/playlist?list=${item.playlistId}`;
+      }
+      if (item.browseId) {
+        return `https://music.youtube.com/browse/${item.browseId}`;
+      }
+      return "";
+    }
+
+    function createCard(item) {
+      const card = document.createElement("div");
+      card.className = "result-card";
+
+      const thumbUrl = pickThumbnail(item);
+      if (thumbUrl) {
+        const img = document.createElement("img");
+        img.className = "result-thumb";
+        img.src = thumbUrl;
+        img.alt = item.title || "Thumbnail";
+        card.appendChild(img);
+      }
+
+      const title = document.createElement("p");
+      title.className = "result-title";
+      title.textContent = item.title || item.name || "Untitled";
+      card.appendChild(title);
+
+      const subtitle = document.createElement("p");
+      subtitle.className = "result-sub";
+      subtitle.textContent = getSubtitle(item) || "";
+      card.appendChild(subtitle);
+
+      const tags = getTags(item);
+      if (tags.length) {
+        const tagWrap = document.createElement("div");
+        tagWrap.className = "result-tags";
+        tags.forEach((tag) => {
+          const el = document.createElement("span");
+          el.className = "tag";
+          el.textContent = tag;
+          tagWrap.appendChild(el);
+        });
+        card.appendChild(tagWrap);
+      }
+
+      const link = buildLink(item);
+      if (link) {
+        const anchor = document.createElement("a");
+        anchor.className = "link";
+        anchor.href = link;
+        anchor.target = "_blank";
+        anchor.rel = "noreferrer";
+        anchor.textContent = "Open in YouTube Music";
+        card.appendChild(anchor);
+      }
+
+      if (item.videoId) {
+        card.classList.add("clickable");
+        card.addEventListener("click", () => setPlayer(item));
+
+        const playBtn = document.createElement("button");
+        playBtn.type = "button";
+        playBtn.className = "action-link";
+        playBtn.textContent = "Play here";
+        playBtn.addEventListener("click", (event) => {
+          event.stopPropagation();
+          setPlayer(item);
+        });
+        card.appendChild(playBtn);
+      }
+
+      return card;
+    }
+
+    async function runSearch() {
+      const base = baseInput.value.trim().replace(/\/$/, "");
+      const query = queryInput.value.trim();
+      const filter = filterInput.value.trim();
+      const limit = limitInput.value.trim();
+
+      if (!base || !query) {
+        clearResults("Base URL and query are required.");
+        setStatus("Missing base URL or query.", "error");
+        return;
+      }
+
+      const currentToken = ++requestToken;
+      setStatus("Searching...", "loading");
+      clearResults("Searching...");
+
+      const url = new URL(`${base}/api/search`);
+      url.searchParams.set("q", query);
+      if (filter) url.searchParams.set("filter", filter);
+      if (limit) url.searchParams.set("limit", limit);
+
+      try {
+        const response = await fetch(url.toString());
+        const data = await response.json();
+        if (currentToken !== requestToken) {
+          return;
+        }
+        if (!response.ok) {
+          clearResults("Request failed.");
+          setStatus(data.error || "Request failed", "error");
+          return;
+        }
+
+        const items = Array.isArray(data.items) ? data.items : [];
+        results.innerHTML = "";
+        if (!items.length) {
+          clearResults("No results found.");
+          setStatus("No results.", "success");
+          setPlayer(null);
+          return;
+        }
+
+        const firstPlayable = items.find((item) => item.videoId);
+        setPlayer(firstPlayable || null);
+
+        setStatus(`Showing ${items.length} results.`, "success");
+        if (streamResults.checked) {
+          items.forEach((item, index) => {
+            setTimeout(() => {
+              if (currentToken !== requestToken) return;
+              results.appendChild(createCard(item));
+            }, index * 80);
+          });
+        } else {
+          items.forEach((item) => results.appendChild(createCard(item)));
+        }
+      } catch (err) {
+        if (currentToken !== requestToken) {
+          return;
+        }
+        clearResults("Request failed.");
+        setStatus(`Request failed: ${err.message}`, "error");
+      }
+    }
+
+    function scheduleSearch() {
+      if (!autoSearch.checked) {
+        return;
+      }
+      if (debounceTimer) {
+        clearTimeout(debounceTimer);
+      }
+      debounceTimer = setTimeout(runSearch, 350);
+    }
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      runSearch();
+    });
+
+    queryInput.addEventListener("input", scheduleSearch);
+    filterInput.addEventListener("change", scheduleSearch);
+    limitInput.addEventListener("change", scheduleSearch);
+
+    setStatus("Ready.", "");
+  </script>
+</body>
+</html>
