@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>YTMusic API Docs</title>
-  <meta name="description" content="HTTP documentation for the YTMusic API wrapper." />
+  <title>yoytmusic-api Docs</title>
+  <meta name="description" content="HTTP documentation for the yoytmusic-api wrapper." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -23,10 +24,15 @@
 
     * { box-sizing: border-box; }
 
+    html {
+      background: var(--bg);
+    }
+
     body {
       margin: 0;
       font-family: "IBM Plex Sans", system-ui, sans-serif;
       color: var(--ink);
+      background-color: var(--bg);
       background:
         radial-gradient(900px 600px at 85% -10%, rgba(123, 223, 242, 0.2), transparent 60%),
         radial-gradient(700px 500px at 10% 0%, rgba(248, 205, 218, 0.18), transparent 55%),
@@ -57,20 +63,51 @@
       color: var(--accent);
     }
 
-    nav {
+    .side-nav {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(11, 12, 18, 0.85);
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      z-index: 10;
+    }
+
+    .side-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      transition: border-color 0.2s ease, color 0.2s ease;
+      text-align: center;
+    }
+
+    .side-nav a:hover {
+      color: var(--ink);
+      border-color: var(--accent);
+    }
+
+    .top-nav {
       display: flex;
       flex-wrap: wrap;
       gap: 12px;
       font-size: 14px;
     }
 
-    nav a {
+    .top-nav a {
       color: var(--muted);
       text-decoration: none;
       border-bottom: 1px solid transparent;
     }
 
-    nav a:hover {
+    .top-nav a:hover {
       color: var(--ink);
       border-color: var(--accent);
     }
@@ -160,26 +197,44 @@
       color: var(--muted);
       font-size: 14px;
     }
+
+    @media (max-width: 720px) {
+      .side-nav {
+        position: static;
+        transform: none;
+        margin: 20px 0 0;
+        width: 100%;
+        grid-auto-flow: column;
+        justify-content: center;
+      }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <div class="logo">YTMusic API Docs</div>
-      <nav>
-        <a href="#overview">Overview</a>
-        <a href="#endpoints">Endpoints</a>
-        <a href="#examples">Examples</a>
-        <a href="#openapi">OpenAPI</a>
-        <a href="#errors">Errors</a>
-        <a href="/">Landing</a>
+      <div class="logo">yoytmusic-api Docs</div>
+      <nav class="top-nav" aria-label="Pages">
+        <a href="/">Home</a>
+        <a href="/docs/">Docs</a>
+        <a href="/docs/playground.html">Playground</a>
+        <a href="/docs/openapi.json">OpenAPI</a>
       </nav>
     </header>
+
+    <nav class="side-nav" aria-label="Sections">
+      <a href="#overview">Overview</a>
+      <a href="#endpoints">Endpoints</a>
+      <a href="#examples">Examples</a>
+      <a href="#openapi">OpenAPI</a>
+      <a href="#playground">Playground</a>
+      <a href="#errors">Errors</a>
+    </nav>
 
     <section id="overview" class="card">
       <div class="pill">Read Only</div>
       <div class="pill">Public + Auth</div>
-      <h1>HTTP docs for the YTMusic API wrapper.</h1>
+      <h1>HTTP docs for the yoytmusic-api wrapper.</h1>
       <p>This API exposes public YouTube Music data through simple HTTP endpoints built on top of <code>ytmusicapi</code>. Public endpoints live under <code>/api/public</code>. Auth-required endpoints live under <code>/api/auth</code> and return <code>401</code> until OAuth is enabled.</p>
       <p>Base URL: <code>https://YOUR_APP.vercel.app</code></p>
     </section>
@@ -291,6 +346,12 @@
       <h2>OpenAPI Spec</h2>
       <p>Download the OpenAPI file to generate SDKs or explore in tooling like Swagger UI:</p>
       <pre><code>/docs/openapi.json</code></pre>
+    </section>
+
+    <section id="playground" class="card">
+      <h2>API Playground</h2>
+      <p>Use the interactive playground to test public, legacy, and auth endpoints with real payloads.</p>
+      <pre><code>/docs/playground.html</code></pre>
     </section>
 
     <section id="errors" class="card">

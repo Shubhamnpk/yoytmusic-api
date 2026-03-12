@@ -1,4 +1,4 @@
-# YTMusic API on Vercel
+# yoytmusic-api
 
 Serverless HTTP wrapper around `ytmusicapi` for public YouTube Music data. Designed for Vercel, with CORS enabled and a minimal surface area for quick integrations.
 
@@ -10,6 +10,7 @@ Serverless HTTP wrapper around `ytmusicapi` for public YouTube Music data. Desig
 - Serverless-friendly limits and predictable responses.
 - Static landing page at `/` and docs at `/docs/`.
 - OpenAPI spec at `/docs/openapi.json`.
+- Custom favicon at `/favicon.svg`.
 
 ## Docs Pages
 

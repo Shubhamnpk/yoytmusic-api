@@ -3,8 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>YTMusic API Wrapper</title>
-  <meta name="description" content="Serverless HTTP wrapper for ytmusicapi with public endpoints." />
+  <title>yoytmusic-api</title>
+  <meta name="description" content="yoytmusic-api: serverless HTTP wrapper for ytmusicapi with public endpoints." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
@@ -26,10 +27,15 @@
 
     * { box-sizing: border-box; }
 
+    html {
+      background: var(--bg);
+    }
+
     body {
       margin: 0;
       font-family: "IBM Plex Sans", system-ui, sans-serif;
       color: var(--ink);
+      background-color: var(--bg);
       background:
         radial-gradient(1200px 600px at 10% -10%, rgba(255, 138, 61, 0.22), transparent 60%),
         radial-gradient(900px 500px at 90% 10%, rgba(123, 223, 242, 0.16), transparent 55%),
@@ -61,20 +67,51 @@
       color: var(--accent-2);
     }
 
-    nav {
+    .side-nav {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(11, 14, 22, 0.8);
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      z-index: 10;
+    }
+
+    .side-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      transition: border-color 0.2s ease, color 0.2s ease;
+      text-align: center;
+    }
+
+    .side-nav a:hover {
+      color: var(--ink);
+      border-color: rgba(123, 223, 242, 0.45);
+    }
+
+    .top-nav {
       display: flex;
       flex-wrap: wrap;
       gap: 16px;
       font-size: 14px;
     }
 
-    nav a {
+    .top-nav a {
       color: var(--muted);
       text-decoration: none;
       border-bottom: 1px solid transparent;
     }
 
-    nav a:hover {
+    .top-nav a:hover {
       color: var(--ink);
       border-color: var(--accent-3);
     }
@@ -454,20 +491,35 @@
       header { flex-direction: column; align-items: flex-start; }
       .actions { width: 100%; }
       .btn { width: 100%; }
+      .side-nav {
+        position: static;
+        transform: none;
+        margin: 20px 0 0;
+        width: 100%;
+        grid-auto-flow: column;
+        justify-content: center;
+      }
     }
   </style>
 </head>
 <body data-repo="">
   <div class="wrap">
     <header>
-      <div class="logo">YTMusic API Wrapper</div>
-      <nav>
-        <a href="#features">Features</a>
-        <a href="#endpoints">Endpoints</a>
-        <a href="#demo">Demo</a>
+      <div class="logo">yoytmusic-api</div>
+      <nav class="top-nav" aria-label="Pages">
+        <a href="/">Home</a>
         <a href="/docs/">Docs</a>
+        <a href="/docs/playground.html">Playground</a>
+        <a href="/docs/openapi.json">OpenAPI</a>
       </nav>
     </header>
+
+    <nav class="side-nav" aria-label="Sections">
+      <a href="#features">Features</a>
+      <a href="#endpoints">Endpoints</a>
+      <a href="#demo">Demo</a>
+      <a href="#how">How It Works</a>
+    </nav>
 
     <section class="hero">
       <div>
@@ -599,7 +651,7 @@
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" id="how">
       <h2>How It Works</h2>
       <div class="grid">
         <div class="card">

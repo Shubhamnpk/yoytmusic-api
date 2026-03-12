@@ -40,6 +40,14 @@ def _send_html(handler, status, payload):
     handler.wfile.write(payload)
 
 
+def _send_bytes(handler, status, payload, content_type):
+    handler.send_response(status)
+    handler.send_header("Content-Type", content_type)
+    handler.send_header("Content-Length", str(len(payload)))
+    handler.end_headers()
+    handler.wfile.write(payload)
+
+
 def _send_text(handler, status, payload):
     body = payload.encode("utf-8")
     handler.send_response(status)
@@ -75,8 +83,27 @@ class RouterHandler(BaseHTTPRequestHandler):
         if path in ("/", "/index.html"):
             return _send_html(self, 200, _read_file(os.path.join(ROOT_DIR, "index.html")))
 
+        if path == "/favicon.svg":
+            return _send_bytes(
+                self,
+                200,
+                _read_file(os.path.join(ROOT_DIR, "favicon.svg")),
+                "image/svg+xml; charset=utf-8",
+            )
+
         if path in ("/docs", "/docs/"):
             return _send_html(self, 200, _read_file(os.path.join(ROOT_DIR, "docs", "index.html")))
+
+        if path in ("/docs/playground", "/docs/playground.html"):
+            return _send_html(self, 200, _read_file(os.path.join(ROOT_DIR, "docs", "playground.html")))
+
+        if path == "/docs/openapi.json":
+            return _send_bytes(
+                self,
+                200,
+                _read_file(os.path.join(ROOT_DIR, "docs", "openapi.json")),
+                "application/json; charset=utf-8",
+            )
 
         if path == "/api/health":
             return _send_json(self, 200, {"ok": True})

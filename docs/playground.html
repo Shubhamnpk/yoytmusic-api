@@ -1,0 +1,729 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>yoytmusic-api Playground</title>
+  <meta name="description" content="Test yoytmusic-api endpoints with a real-world playground." />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b0d14;
+      --bg-2: #121827;
+      --ink: #f4f6fb;
+      --muted: #a6b0c2;
+      --accent: #5eead4;
+      --accent-2: #ffb347;
+      --accent-3: #7aa2ff;
+      --card: rgba(16, 21, 34, 0.92);
+      --stroke: rgba(255, 255, 255, 0.08);
+      --shadow: 0 18px 48px rgba(0, 0, 0, 0.38);
+      --danger: #ff6b6b;
+      --success: #60e6a8;
+    }
+
+    * { box-sizing: border-box; }
+
+    html {
+      background: var(--bg);
+    }
+
+    body {
+      margin: 0;
+      font-family: "IBM Plex Sans", system-ui, sans-serif;
+      color: var(--ink);
+      background-color: var(--bg);
+      background:
+        radial-gradient(900px 600px at 85% -10%, rgba(94, 234, 212, 0.18), transparent 60%),
+        radial-gradient(700px 500px at 10% 0%, rgba(122, 162, 255, 0.16), transparent 55%),
+        linear-gradient(180deg, var(--bg), var(--bg-2));
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .logo {
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      font-size: 13px;
+      color: var(--accent);
+    }
+
+    .side-nav {
+      position: fixed;
+      right: 24px;
+      top: 50%;
+      transform: translateY(-50%);
+      display: grid;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 16px;
+      background: rgba(11, 12, 18, 0.85);
+      border: 1px solid var(--stroke);
+      box-shadow: var(--shadow);
+      z-index: 10;
+    }
+
+    .side-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid transparent;
+      transition: border-color 0.2s ease, color 0.2s ease;
+      text-align: center;
+    }
+
+    .side-nav a:hover {
+      color: var(--ink);
+      border-color: var(--accent-3);
+    }
+
+    .top-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      font-size: 14px;
+    }
+
+    .top-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+    }
+
+    .top-nav a:hover {
+      color: var(--ink);
+      border-color: var(--accent-3);
+    }
+
+    h1, h2, h3 {
+      font-family: "Space Grotesk", system-ui, sans-serif;
+      margin: 0 0 12px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 4vw, 46px);
+    }
+
+    h2 {
+      font-size: 22px;
+      margin-top: 0;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.7;
+      margin: 0 0 16px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(260px, 1.1fr) minmax(280px, 1fr);
+      gap: 24px;
+      align-items: center;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--stroke);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: var(--shadow);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--stroke);
+      color: var(--muted);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 12px;
+    }
+
+    label {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    input, select, textarea, button {
+      font-family: inherit;
+      color: var(--ink);
+    }
+
+    .input, .select, .textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--stroke);
+      background: rgba(10, 12, 20, 0.85);
+    }
+
+    .textarea {
+      min-height: 84px;
+      resize: vertical;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 12px;
+    }
+
+    .input::placeholder, .textarea::placeholder {
+      color: #7f8aa3;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--stroke);
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 600;
+      background: linear-gradient(135deg, rgba(94, 234, 212, 0.2), rgba(122, 162, 255, 0.16));
+      cursor: pointer;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .btn.secondary {
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      border-color: rgba(94, 234, 212, 0.5);
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 10px;
+      min-height: 20px;
+    }
+
+    .status .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--muted);
+    }
+
+    .status.loading .dot {
+      background: var(--accent);
+      box-shadow: 0 0 12px rgba(94, 234, 212, 0.7);
+      animation: pulse 1.2s infinite ease-in-out;
+    }
+
+    .status.success {
+      color: var(--success);
+    }
+
+    .status.error {
+      color: var(--danger);
+    }
+
+    pre {
+      background: rgba(9, 12, 20, 0.9);
+      border: 1px solid var(--stroke);
+      border-radius: 12px;
+      padding: 14px;
+      overflow: auto;
+      margin: 0;
+      font-size: 12px;
+      color: #d8e3ff;
+    }
+
+    code {
+      background: rgba(255, 255, 255, 0.07);
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 12px;
+      color: #cfeeff;
+    }
+
+    .footer {
+      margin-top: 48px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(1); opacity: 0.6; }
+    }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 720px) {
+      .side-nav {
+        position: static;
+        transform: none;
+        margin: 20px 0 0;
+        width: 100%;
+        grid-auto-flow: column;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">yoytmusic-api Playground</div>
+      <nav class="top-nav" aria-label="Pages">
+        <a href="/">Home</a>
+        <a href="/docs/">Docs</a>
+        <a href="/docs/playground.html">Playground</a>
+        <a href="/docs/openapi.json">OpenAPI</a>
+      </nav>
+    </header>
+
+    <nav class="side-nav" aria-label="Sections">
+      <a href="#base">Base</a>
+      <a href="#quick">Quick</a>
+      <a href="#search">Search</a>
+      <a href="#public">Public</a>
+      <a href="#auth">Auth</a>
+    </nav>
+
+    <section class="hero" id="base">
+      <div>
+        <div class="pill">Real App Workflow</div>
+        <h1>Test every endpoint from a single page.</h1>
+        <p>Use this playground to exercise public, legacy, and auth endpoints with realistic payloads. Responses show status, timing, and parsed JSON so you can validate integration behavior.</p>
+      </div>
+      <div class="card">
+        <h2>Base URL</h2>
+        <p>Defaults to the current origin when hosted.</p>
+        <div class="row">
+          <div class="field">
+            <label for="base-url">Base URL</label>
+            <input id="base-url" class="input" placeholder="https://YOUR_APP.vercel.app" />
+          </div>
+          <div class="field">
+            <label for="use-origin">Quick actions</label>
+            <div class="row">
+              <button class="btn" id="use-origin" type="button">Use current origin</button>
+              <button class="btn secondary" id="clear-base" type="button">Clear</button>
+            </div>
+          </div>
+        </div>
+        <p><code>Public</code> endpoints live under <code>/api/public</code>. Auth endpoints live under <code>/api/auth</code>.</p>
+      </div>
+    </section>
+
+    <section class="grid" id="quick">
+      <div class="card">
+        <h2>Quick Checks</h2>
+        <p>Validate uptime and version metadata.</p>
+        <div class="row">
+          <button class="btn" id="health-btn" type="button">GET /api/health</button>
+          <button class="btn" id="version-btn" type="button">GET /api/version</button>
+          <button class="btn secondary" id="openapi-btn" type="button">GET /docs/openapi.json</button>
+        </div>
+        <div class="status" id="quick-status"><span class="dot"></span><span>Ready.</span></div>
+        <pre><code id="quick-output">// Response will appear here.</code></pre>
+      </div>
+      <div class="card">
+        <h2>Notes</h2>
+        <p>Auth endpoints return <code>401</code> until OAuth is enabled.</p>
+        <p>Legacy endpoints <code>/api/search</code> and <code>/api/ytmusic</code> remain for backwards compatibility.</p>
+        <p>OpenAPI lives at <code>/docs/openapi.json</code>.</p>
+      </div>
+    </section>
+
+    <section class="card" id="search">
+      <h2>Search</h2>
+      <p>Call the public search endpoint with real filters.</p>
+      <div class="row">
+        <div class="field">
+          <label for="search-endpoint">Endpoint</label>
+          <select id="search-endpoint" class="select">
+            <option value="/api/public/search">/api/public/search</option>
+            <option value="/api/search">/api/search (legacy)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="search-query">Query</label>
+          <input id="search-query" class="input" value="Oasis" />
+        </div>
+        <div class="field">
+          <label for="search-filter">Filter</label>
+          <select id="search-filter" class="select">
+            <option value="">All</option>
+            <option value="songs">Songs</option>
+            <option value="videos">Videos</option>
+            <option value="albums">Albums</option>
+            <option value="artists">Artists</option>
+            <option value="playlists">Playlists</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="search-limit">Limit</label>
+          <select id="search-limit" class="select">
+            <option value="5">5</option>
+            <option value="10" selected>10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="25">25</option>
+          </select>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 12px;">
+        <button class="btn" id="search-btn" type="button">Run Search</button>
+      </div>
+      <div class="status" id="search-status"><span class="dot"></span><span>Ready.</span></div>
+      <pre><code id="search-output">// Response will appear here.</code></pre>
+    </section>
+
+    <section class="grid" id="public">
+      <div class="card">
+        <h2>Public Method Call</h2>
+        <p>Invoke allowlisted methods using GET or POST.</p>
+        <div class="row">
+          <div class="field">
+            <label for="public-endpoint">Endpoint</label>
+            <select id="public-endpoint" class="select">
+              <option value="/api/public/ytmusic">/api/public/ytmusic</option>
+              <option value="/api/ytmusic">/api/ytmusic (legacy)</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="public-method">Method</label>
+            <input id="public-method" class="input" value="get_song" />
+          </div>
+          <div class="field">
+            <label for="public-http">HTTP</label>
+            <select id="public-http" class="select">
+              <option value="GET">GET</option>
+              <option value="POST">POST</option>
+            </select>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 12px;">
+          <div class="field">
+            <label for="public-args">Args (JSON array)</label>
+            <textarea id="public-args" class="textarea">["VIDEO_ID"]</textarea>
+          </div>
+          <div class="field">
+            <label for="public-kwargs">Kwargs (JSON object)</label>
+            <textarea id="public-kwargs" class="textarea">{}</textarea>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 12px;">
+          <button class="btn" id="public-btn" type="button">Run Public Method</button>
+        </div>
+        <div class="status" id="public-status"><span class="dot"></span><span>Ready.</span></div>
+        <pre><code id="public-output">// Response will appear here.</code></pre>
+      </div>
+      <div class="card" id="auth">
+        <h2>Auth Method Call</h2>
+        <p>Reserved for OAuth. Expect <code>401</code> until enabled.</p>
+        <div class="row">
+          <div class="field">
+            <label for="auth-method">Method</label>
+            <input id="auth-method" class="input" value="get_library_playlists" />
+          </div>
+          <div class="field">
+            <label for="auth-http">HTTP</label>
+            <select id="auth-http" class="select">
+              <option value="GET">GET</option>
+              <option value="POST">POST</option>
+            </select>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 12px;">
+          <div class="field">
+            <label for="auth-args">Args (JSON array)</label>
+            <textarea id="auth-args" class="textarea">[]</textarea>
+          </div>
+          <div class="field">
+            <label for="auth-kwargs">Kwargs (JSON object)</label>
+            <textarea id="auth-kwargs" class="textarea">{}</textarea>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 12px;">
+          <button class="btn" id="auth-btn" type="button">Run Auth Method</button>
+        </div>
+        <div class="status" id="auth-status"><span class="dot"></span><span>Ready.</span></div>
+        <pre><code id="auth-output">// Response will appear here.</code></pre>
+      </div>
+    </section>
+
+    <div class="footer">Designed for real integration testing. Update the base URL and run calls like your app would.</div>
+  </div>
+
+  <script>
+    const baseInput = document.getElementById("base-url");
+    const useOriginBtn = document.getElementById("use-origin");
+    const clearBaseBtn = document.getElementById("clear-base");
+
+    function setBaseOrigin() {
+      if (window.location.protocol !== "file:") {
+        baseInput.value = window.location.origin;
+      }
+    }
+
+    setBaseOrigin();
+
+    useOriginBtn.addEventListener("click", () => {
+      setBaseOrigin();
+    });
+
+    clearBaseBtn.addEventListener("click", () => {
+      baseInput.value = "";
+    });
+
+    function getBase() {
+      return baseInput.value.trim().replace(/\/$/, "");
+    }
+
+    function setStatus(el, text, mode) {
+      el.classList.remove("loading", "success", "error");
+      if (mode) {
+        el.classList.add(mode);
+      }
+      el.querySelector("span:last-child").textContent = text;
+    }
+
+    function formatBody(text) {
+      try {
+        return JSON.stringify(JSON.parse(text), null, 2);
+      } catch (err) {
+        return text;
+      }
+    }
+
+    async function runRequest({ path, method, body, statusEl, outputEl }) {
+      const base = getBase();
+      if (!base) {
+        setStatus(statusEl, "Base URL is required.", "error");
+        outputEl.textContent = "";
+        return;
+      }
+
+      const url = `${base}${path}`;
+      const options = { method, headers: {} };
+      if (body !== null) {
+        options.headers["Content-Type"] = "application/json";
+        options.body = JSON.stringify(body);
+      }
+
+      setStatus(statusEl, `${method} ${path} ...`, "loading");
+      const start = performance.now();
+
+      try {
+        const response = await fetch(url, options);
+        const text = await response.text();
+        const elapsed = Math.round(performance.now() - start);
+        const pretty = text ? formatBody(text) : "";
+        outputEl.textContent = pretty || "(empty response)";
+
+        if (response.ok) {
+          setStatus(statusEl, `HTTP ${response.status} in ${elapsed}ms`, "success");
+        } else {
+          setStatus(statusEl, `HTTP ${response.status} in ${elapsed}ms`, "error");
+        }
+      } catch (err) {
+        outputEl.textContent = String(err);
+        setStatus(statusEl, `Request failed: ${err.message}`, "error");
+      }
+    }
+
+    document.getElementById("health-btn").addEventListener("click", () => {
+      runRequest({
+        path: "/api/health",
+        method: "GET",
+        body: null,
+        statusEl: document.getElementById("quick-status"),
+        outputEl: document.getElementById("quick-output"),
+      });
+    });
+
+    document.getElementById("version-btn").addEventListener("click", () => {
+      runRequest({
+        path: "/api/version",
+        method: "GET",
+        body: null,
+        statusEl: document.getElementById("quick-status"),
+        outputEl: document.getElementById("quick-output"),
+      });
+    });
+
+    document.getElementById("openapi-btn").addEventListener("click", () => {
+      runRequest({
+        path: "/docs/openapi.json",
+        method: "GET",
+        body: null,
+        statusEl: document.getElementById("quick-status"),
+        outputEl: document.getElementById("quick-output"),
+      });
+    });
+
+    document.getElementById("search-btn").addEventListener("click", () => {
+      const endpoint = document.getElementById("search-endpoint").value;
+      const query = document.getElementById("search-query").value.trim();
+      const filter = document.getElementById("search-filter").value.trim();
+      const limit = document.getElementById("search-limit").value.trim();
+
+      if (!query) {
+        setStatus(document.getElementById("search-status"), "Query is required.", "error");
+        document.getElementById("search-output").textContent = "";
+        return;
+      }
+
+      const params = new URLSearchParams();
+      params.set("q", query);
+      if (filter) params.set("filter", filter);
+      if (limit) params.set("limit", limit);
+
+      runRequest({
+        path: `${endpoint}?${params.toString()}`,
+        method: "GET",
+        body: null,
+        statusEl: document.getElementById("search-status"),
+        outputEl: document.getElementById("search-output"),
+      });
+    });
+
+    function parseJsonField(text, label, statusEl, outputEl) {
+      if (!text.trim()) {
+        return null;
+      }
+      try {
+        return JSON.parse(text);
+      } catch (err) {
+        setStatus(statusEl, `${label} must be valid JSON.`, "error");
+        outputEl.textContent = `${label} parse error: ${err.message}`;
+        return undefined;
+      }
+    }
+
+    document.getElementById("public-btn").addEventListener("click", () => {
+      const endpoint = document.getElementById("public-endpoint").value;
+      const methodName = document.getElementById("public-method").value.trim();
+      const httpMethod = document.getElementById("public-http").value;
+      const statusEl = document.getElementById("public-status");
+      const outputEl = document.getElementById("public-output");
+
+      if (!methodName) {
+        setStatus(statusEl, "Method is required.", "error");
+        outputEl.textContent = "";
+        return;
+      }
+
+      const args = parseJsonField(document.getElementById("public-args").value, "Args", statusEl, outputEl);
+      if (args === undefined) return;
+      const kwargs = parseJsonField(document.getElementById("public-kwargs").value, "Kwargs", statusEl, outputEl);
+      if (kwargs === undefined) return;
+
+      if (httpMethod === "GET") {
+        const params = new URLSearchParams();
+        params.set("method", methodName);
+        params.set("args", JSON.stringify(args || []));
+        params.set("kwargs", JSON.stringify(kwargs || {}));
+        runRequest({
+          path: `${endpoint}?${params.toString()}`,
+          method: "GET",
+          body: null,
+          statusEl,
+          outputEl,
+        });
+      } else {
+        runRequest({
+          path: endpoint,
+          method: "POST",
+          body: { method: methodName, args: args || [], kwargs: kwargs || {} },
+          statusEl,
+          outputEl,
+        });
+      }
+    });
+
+    document.getElementById("auth-btn").addEventListener("click", () => {
+      const methodName = document.getElementById("auth-method").value.trim();
+      const httpMethod = document.getElementById("auth-http").value;
+      const statusEl = document.getElementById("auth-status");
+      const outputEl = document.getElementById("auth-output");
+
+      if (!methodName) {
+        setStatus(statusEl, "Method is required.", "error");
+        outputEl.textContent = "";
+        return;
+      }
+
+      const args = parseJsonField(document.getElementById("auth-args").value, "Args", statusEl, outputEl);
+      if (args === undefined) return;
+      const kwargs = parseJsonField(document.getElementById("auth-kwargs").value, "Kwargs", statusEl, outputEl);
+      if (kwargs === undefined) return;
+
+      if (httpMethod === "GET") {
+        const params = new URLSearchParams();
+        params.set("method", methodName);
+        params.set("args", JSON.stringify(args || []));
+        params.set("kwargs", JSON.stringify(kwargs || {}));
+        runRequest({
+          path: `/api/auth/ytmusic?${params.toString()}`,
+          method: "GET",
+          body: null,
+          statusEl,
+          outputEl,
+        });
+      } else {
+        runRequest({
+          path: "/api/auth/ytmusic",
+          method: "POST",
+          body: { method: methodName, args: args || [], kwargs: kwargs || {} },
+          statusEl,
+          outputEl,
+        });
+      }
+    });
+  </script>
+</body>
+</html>
