@@ -116,7 +116,8 @@ class RouterHandler(BaseHTTPRequestHandler):
                     "endpoints": {
                         "health": "/api/health",
                         "version": "/api/version",
-                        "public_search": "/api/public/search",
+                    "public_search": "/api/public/search",
+                    "global_search": "/api/public/global-search",
                         "public_method": "/api/public/ytmusic",
                         "auth_method": "/api/auth/ytmusic",
                         "openapi": "/docs/openapi.json",
@@ -150,6 +151,51 @@ class RouterHandler(BaseHTTPRequestHandler):
                 return _send_json(self, 500, {"error": "ytmusicapi search failed", "detail": str(exc)})
 
             return _send_json(self, 200, {"query": query, "count": len(results), "items": results})
+
+        if path in (
+            "/api/global-search",
+            "/api/public/global-search",
+            "/api/global_search",
+            "/api/public/global_search",
+        ):
+            from api.global_search import execute_global_search, _parse_filters
+
+            params = parse_qs(parsed.query)
+            query = (params.get("q") or [""])[0].strip()
+            if not query:
+                return _send_json(self, 400, {"error": "Missing required query param: q"})
+
+            limit_raw = (params.get("limit") or [str(DEFAULT_LIMIT)])[0]
+            try:
+                limit = int(limit_raw)
+            except ValueError:
+                return _send_json(self, 400, {"error": "limit must be an integer"})
+
+            limit = clamp_limit(limit)
+
+            filters_raw = (params.get("filters") or [None])[0]
+            try:
+                filters = _parse_filters(filters_raw)
+            except ValueError as exc:
+                return _send_json(self, 400, {"error": str(exc)})
+
+            if not filters:
+                return _send_json(
+                    self,
+                    400,
+                    {"error": "filters must be a comma-separated list of allowed values"},
+                )
+
+            try:
+                results = execute_global_search(_ytmusic, query, filters, limit)
+            except Exception as exc:
+                return _send_json(self, 500, {"error": "ytmusicapi search failed", "detail": str(exc)})
+
+            return _send_json(
+                self,
+                200,
+                {"query": query, "count": len(results), "items": results, "filters": filters},
+            )
 
         if path in ("/api/ytmusic", "/api/public/ytmusic"):
             params = parse_qs(parsed.query)
