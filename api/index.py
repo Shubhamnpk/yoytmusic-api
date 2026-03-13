@@ -40,14 +40,15 @@ def _handle_info(h):
         "name": "yoytmusic-api",
         "status": "ok",
         "version": get_version_payload(),
-        "endpoints": {
-            "health": "/api/health",
-            "version": "/api/version",
-            "public_search": "/api/public/search",
-            "public_method": "/api/public/ytmusic",
-            "auth_method": "/api/auth/ytmusic",
-            "openapi": "/docs/openapi.json",
-        },
+            "endpoints": {
+                "health": "/api/health",
+                "version": "/api/version",
+                "public_search": "/api/public/search",
+                "global_search": "/api/public/global-search",
+                "public_method": "/api/public/ytmusic",
+                "auth_method": "/api/auth/ytmusic",
+                "openapi": "/docs/openapi.json",
+            },
     })
 
 

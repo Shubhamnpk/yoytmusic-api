@@ -386,6 +386,8 @@
           <select id="search-endpoint" class="select">
             <option value="/api/public/search">/api/public/search</option>
             <option value="/api/search">/api/search (legacy)</option>
+            <option value="/api/public/global-search">/api/public/global-search</option>
+            <option value="/api/global-search">/api/global-search (legacy)</option>
           </select>
         </div>
         <div class="field">
@@ -619,7 +621,11 @@
 
       const params = new URLSearchParams();
       params.set("q", query);
-      if (filter) params.set("filter", filter);
+      if (endpoint.includes("global-search")) {
+        if (filter) params.set("filters", filter);
+      } else if (filter) {
+        params.set("filter", filter);
+      }
       if (limit) params.set("limit", limit);
 
       runRequest({

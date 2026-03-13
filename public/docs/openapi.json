@@ -120,6 +120,63 @@
           }
         }
       }
+      },
+    "/api/public/global-search": {
+      "get": {
+        "summary": "Global search across multiple categories",
+        "parameters": [
+          {
+            "name": "q",
+            "in": "query",
+            "required": true,
+            "schema": { "type": "string" },
+            "description": "Search query"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 25 },
+            "description": "Result limit (clamped 1-25)"
+          },
+          {
+            "name": "filters",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "songs,artists,playlists"
+            },
+            "description": "Comma-separated list of: songs, videos, albums, artists, playlists"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SearchResponse" }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          },
+          "500": {
+            "description": "Upstream failure",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ErrorResponse" }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/public/ytmusic": {
       "get": {
@@ -307,6 +364,23 @@
                 }
               }
             }
+          }
+        }
+      }
+      },
+    "/api/global-search": {
+      "get": {
+        "summary": "Legacy global search",
+        "deprecated": true,
+        "parameters": [
+          { "name": "q", "in": "query", "required": true, "schema": { "type": "string" } },
+          { "name": "limit", "in": "query", "required": false, "schema": { "type": "integer", "default": 10, "minimum": 1, "maximum": 25 } },
+          { "name": "filters", "in": "query", "required": false, "schema": { "type": "string" } }
+        ],
+        "responses": {
+          "200": {
+            "description": "Search results",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SearchResponse" } } }
           }
         }
       }

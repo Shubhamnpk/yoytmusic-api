@@ -92,6 +92,18 @@ Response:
 
 Same behavior as `/api/search`, but explicitly scoped to public access. Recommended for new clients.
 
+### `GET /api/public/global-search`
+
+Global search that combines multiple categories (songs + artists + playlists by default).
+
+Query parameters:
+
+| Name | Type | Required | Default | Notes |
+| --- | --- | --- | --- | --- |
+| `q` | string | Yes | - | Search query |
+| `limit` | int | No | 10 | Clamped between 1 and 25 |
+| `filters` | string | No | `songs,artists,playlists` | Comma-separated list of `songs`, `videos`, `albums`, `artists`, `playlists` |
+
 ### `GET /api/ytmusic`
 
 Query parameters:
