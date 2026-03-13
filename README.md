@@ -1,9 +1,6 @@
 # yoytmusic-api
 
-![yoytmusic-api favicon](public/favicon.svg)
-
-**yoytmusic-api**
-serverless HTTP wrapper for `ytmusicapi` with public endpoints, OpenAPI docs, and a testing playground. Serverless HTTP wrapper around `ytmusicapi` for public YouTube Music data. Designed for Vercel, with CORS enabled and a minimal surface area for quick integrations.
+Serverless HTTP wrapper around `ytmusicapi` for public YouTube Music data. Designed for Vercel, with CORS enabled and a minimal surface area for quick integrations.
 
 ## Features
 
@@ -94,18 +91,6 @@ Response:
 ### `GET /api/public/search`
 
 Same behavior as `/api/search`, but explicitly scoped to public access. Recommended for new clients.
-
-### `GET /api/public/global-search`
-
-Global search that combines multiple categories (songs + artists + playlists by default).
-
-Query parameters:
-
-| Name | Type | Required | Default | Notes |
-| --- | --- | --- | --- | --- |
-| `q` | string | Yes | - | Search query |
-| `limit` | int | No | 10 | Clamped between 1 and 25 |
-| `filters` | string | No | `songs,artists,playlists` | Comma-separated list of `songs`, `videos`, `albums`, `artists`, `playlists` |
 
 ### `GET /api/ytmusic`
 

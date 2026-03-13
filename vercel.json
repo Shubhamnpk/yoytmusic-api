@@ -2,8 +2,6 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
     { "source": "/", "destination": "/index.html" },
-    { "source": "/api/global-search", "destination": "/api/global_search" },
-    { "source": "/api/public/global-search", "destination": "/api/public/global_search" },
     { "source": "/docs/playground", "destination": "/docs/playground.html" },
     { "source": "/docs", "destination": "/docs/index.html" },
     { "source": "/docs/", "destination": "/docs/index.html" }
