@@ -1,10 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
   "rewrites": [
-    { "source": "/", "destination": "/public/index.html" },
-    { "source": "/docs/playground", "destination": "/public/docs/playground.html" },
-    { "source": "/docs", "destination": "/public/docs/index.html" },
-    { "source": "/docs/", "destination": "/public/docs/index.html" },
-    { "source": "/favicon.svg", "destination": "/public/favicon.svg" }
+    { "source": "/api/(.*)", "destination": "/api/index.py" },
+    { "source": "/docs/playground", "destination": "/docs/playground.html" },
+    { "source": "/docs", "destination": "/docs/index.html" }
   ]
 }

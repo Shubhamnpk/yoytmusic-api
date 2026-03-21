@@ -81,29 +81,34 @@ class RouterHandler(BaseHTTPRequestHandler):
         path = parsed.path
 
         if path in ("/", "/index.html"):
-            return _send_html(self, 200, _read_file(os.path.join(ROOT_DIR, "public", "index.html")))
+            return _send_html(self, 200, _read_file(os.path.join(ROOT_DIR, "index.html")))
 
         if path == "/favicon.svg":
             return _send_bytes(
                 self,
                 200,
-                _read_file(os.path.join(ROOT_DIR, "public", "favicon.svg")),
+                _read_file(os.path.join(ROOT_DIR, "favicon.svg")),
                 "image/svg+xml; charset=utf-8",
             )
 
-        if path in ("/docs", "/docs/"):
-            return _send_html(self, 200, _read_file(os.path.join(ROOT_DIR, "public", "docs", "index.html")))
+        # Static routing map for docs and other pages
+        _STATIC_MAP = {
+            "/docs": ("docs", "index.html", "text/html"),
+            "/docs/": ("docs", "index.html", "text/html"),
+            "/docs/index.html": ("docs", "index.html", "text/html"),
+            "/docs/playground": ("docs", "playground.html", "text/html"),
+            "/docs/playground.html": ("docs", "playground.html", "text/html"),
+            "/docs/openapi.json": ("docs", "openapi.json", "application/json"),
+        }
 
-        if path in ("/docs/playground", "/docs/playground.html"):
-            return _send_html(self, 200, _read_file(os.path.join(ROOT_DIR, "public", "docs", "playground.html")))
+        if path in _STATIC_MAP:
+            folder, filename, ctype = _STATIC_MAP[path]
+            data = _read_file(os.path.join(ROOT_DIR, folder, filename))
+            if ctype == "text/html":
+                return _send_html(self, 200, data)
+            else:
+                return _send_bytes(self, 200, data, ctype + "; charset=utf-8")
 
-        if path == "/docs/openapi.json":
-            return _send_bytes(
-                self,
-                200,
-                _read_file(os.path.join(ROOT_DIR, "public", "docs", "openapi.json")),
-                "application/json; charset=utf-8",
-            )
 
         if path in ("/api", "/api/"):
             return _send_json(
