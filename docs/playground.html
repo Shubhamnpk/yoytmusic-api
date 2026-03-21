@@ -343,7 +343,7 @@
         <div class="row">
           <div class="field">
             <label for="base-url">Base URL</label>
-            <input id="base-url" class="input" placeholder="https://YOUR_APP.vercel.app" />
+            <input id="base-url" class="input" placeholder="https://yoyt.vercel.app" value="https://yoyt.vercel.app" />
           </div>
           <div class="field">
             <label for="use-origin">Quick actions</label>
@@ -505,7 +505,13 @@
 
     function setBaseOrigin() {
       if (window.location.protocol !== "file:") {
-        baseInput.value = window.location.origin;
+        if (window.location.host === "localhost:3000") {
+          baseInput.value = window.location.origin;
+        } else {
+          baseInput.value = "https://yoyt.vercel.app";
+        }
+      } else {
+        baseInput.value = "https://yoyt.vercel.app";
       }
     }
 

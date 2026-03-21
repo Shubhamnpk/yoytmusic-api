@@ -1,4 +1,4 @@
-﻿{
+{
   "openapi": "3.0.3",
   "info": {
     "title": "yoytmusic-api",
@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://yoytmusic-api.vercel.app/"
+      "url": "https://yoyt.vercel.app/"
     }
   ],
   "paths": {

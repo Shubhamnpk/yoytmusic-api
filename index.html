@@ -502,7 +502,7 @@
     }
   </style>
 </head>
-<body data-repo="">
+<body data-repo="https://github.com/Shubhamnpk/yoytmusic-api">
   <div class="wrap">
     <header>
       <div class="logo">yoytmusic-api</div>
@@ -583,7 +583,7 @@
           <form id="demo-form" class="controls">
             <div class="field">
               <label for="base-url">Base URL</label>
-              <input id="base-url" class="input" placeholder="https://YOUR_APP.vercel.app" />
+              <input id="base-url" class="input" placeholder="https://yoyt.vercel.app" value="https://yoyt.vercel.app" />
             </div>
             <div class="field">
               <label for="query">Search Query</label>
@@ -678,7 +678,9 @@
 
     const baseInput = document.getElementById("base-url");
     if (window.location.protocol !== "file:") {
-      baseInput.value = window.location.origin;
+      if (window.location.host === "localhost:3000") {
+        baseInput.value = window.location.origin;
+      }
     }
 
     const form = document.getElementById("demo-form");

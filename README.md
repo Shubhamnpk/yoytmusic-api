@@ -16,9 +16,9 @@ A professional, serverless HTTP wrapper for **ytmusicapi**. Specifically built f
 
 This project comes with a built-in documentation suite to help you get started quickly:
 
-- **[Interactive Playground](public/docs/playground.html)**: Test every endpoint live from your browser.
-- **[OpenAPI Reference](public/docs/index.html)**: Full interactive Swagger-style documentation.
-- **[OpenAPI Spec (JSON)](public/docs/openapi.json)**: Import into Postman, Insomnia, or generate SDKs.
+- **[Interactive Playground](https://shubhamnpk.github.io/yoytmusic-api/docs/playground.html)**: Test every endpoint live from your browser.
+- **[OpenAPI Reference](https://shubhamnpk.github.io/yoytmusic-api/docs/index.html)**: Full interactive Swagger-style documentation.
+- **[OpenAPI Spec (JSON)](https://shubhamnpk.github.io/yoytmusic-api/docs/openapi.json)**: Import into Postman, Insomnia, or generate SDKs.
 
 ---
 
@@ -29,6 +29,11 @@ This project comes with a built-in documentation suite to help you get started q
 - 🛠️ **Generic Methods**: Access over 15+ `ytmusicapi` functions via a single structured endpoint.
 - 🛰️ **CORS-Ready**: `Access-Control-Allow-Origin: *` enabled for direct frontend usage.
 - 📦 **Minimal Footprint**: Lightweight dependencies and fast cold starts.
+
+---
+
+> [!NOTE]
+> **API Root**: While the static documentation is hosted at the root of the project, the actual API endpoints are scoped under the `/api` path. If you visit the root of your API deployment (e.g., on Vercel) and see a 404, simply append `/api` to the URL to access the API entry point.
 
 ---
 ### 🏥 System Health
@@ -71,12 +76,12 @@ Invoke any supported `ytmusicapi` method using either GET or POST.
 
 ## 🚀 Deployment (Vercel)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FYOUR_USERNAME%2FYOUR_REPO_NAME)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FShubhamnpk%2Fyoytmusic-api)
 
 1. **Fork** this repository.
 2. In your Vercel dashboard, click **"Add New Project"** and import the fork.
-3. Vercel will automatically detect the Python functions in `api/` and the static files in `public/`.
-4. Set the `data-repo` attribute on the `<body>` tag in `public/index.html` to point to your new repo.
+3. Vercel will automatically detect the Python functions in `api/` and the static files at the root.
+4. Set the `data-repo` attribute on the `<body>` tag in `index.html` to point to your new repo.
 
 ---
 
@@ -92,6 +97,7 @@ Invoke any supported `ytmusicapi` method using either GET or POST.
    ```
    - Dashboard: `http://localhost:3000`
    - API: `http://localhost:3000/api`
+   - Docs: `http://localhost:3000/docs/index.html`
 
 3. **Test**:
    ```bash
