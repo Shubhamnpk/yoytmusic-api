@@ -1,208 +1,119 @@
-# yoytmusic-api
+<p align="center">
+  <img src="banner.png" alt="yoytmusic-api banner" width="100%">
+</p>
 
-Serverless HTTP wrapper around `ytmusicapi` for public YouTube Music data. Designed for Vercel, with CORS enabled and a minimal surface area for quick integrations.
+# 🎵 yoytmusic-api
 
-## Features
+[![Vercel Deployment](https://img.shields.io/badge/Vercel-black?style=for-the-badge&logo=vercel&logoColor=white)](https://vercel.com/)
+[![MIT License](https://img.shields.io/badge/License-MIT-orange?style=for-the-badge)](LICENSE)
+[![Python Version](https://img.shields.io/badge/Python-3.8+-blue?style=for-the-badge&logo=python&logoColor=white)](https://python.org/)
 
-- Public, read-only YouTube Music data over HTTP.
-- Explicit public/auth endpoint split for future OAuth support.
-- Generic method endpoint for supported `ytmusicapi` methods.
-- Serverless-friendly limits and predictable responses.
-- Static landing page at `/` and docs at `/docs/`.
-- OpenAPI spec at `/docs/openapi.json`.
-- Custom favicon at `/favicon.svg`.
+A professional, serverless HTTP wrapper for **ytmusicapi**. Specifically built for Vercel, it transforms the powerful Python library into a set of clean, CORS-ready JSON endpoints.
 
-## Docs Pages
+---
 
-- Landing: `/`
-- Docs: `/docs/`
-- OpenAPI: `/docs/openapi.json`
+## 📚 Documentation & Explorer
 
-## Quick Start (Vercel)
+This project comes with a built-in documentation suite to help you get started quickly:
 
-1. Push this repo to GitHub.
-2. Create a new Vercel project and import the repo.
-3. Deploy.
+- **[Interactive Playground](public/docs/playground.html)**: Test every endpoint live from your browser.
+- **[OpenAPI Reference](public/docs/index.html)**: Full interactive Swagger-style documentation.
+- **[OpenAPI Spec (JSON)](public/docs/openapi.json)**: Import into Postman, Insomnia, or generate SDKs.
 
-After deploy, your endpoints are live at `https://YOUR_APP.vercel.app/api/...`.
+---
 
-To make the landing page deploy button work, set your repo URL in `index.html` by updating `data-repo` on the `<body>` tag.
+## ✨ Features
 
-## Local Development
+- 🏎️ **Serverless First**: Zero-config deployment on Vercel with Python serverless functions.
+- 🔓 **Public Search**: Instant access to the YouTube Music catalog without needing API keys.
+- 🛠️ **Generic Methods**: Access over 15+ `ytmusicapi` functions via a single structured endpoint.
+- 🛰️ **CORS-Ready**: `Access-Control-Allow-Origin: *` enabled for direct frontend usage.
+- 📦 **Minimal Footprint**: Lightweight dependencies and fast cold starts.
 
-1. Install runtime deps.
+---
+### 🏥 System Health
+- **`GET /api/health`**
+  - **Description**: Quick uptime check.
+  - **Response**: `{"ok": true}`
 
-```bash
-pip install -r requirements.txt
-```
+- **`GET /api/version`**
+  - **Description**: Returns version metadata for the app and `ytmusicapi`.
 
-2. Run the local dev server (no Vercel login required).
+### 🔍 Search Catalog
+- **`GET /api/public/search`**
+  - **Parameters**:
+    - `q` (required): Your search query.
+    - `limit` (optional): `1` to `25` (default: 10).
+    - `filter` (optional): `songs`, `videos`, `albums`, `artists`, `playlists`.
+  - **Example**:
+    ```bash
+    curl "https://yoyt.vercel.app/api/public/search?q=Oasis&limit=5&filter=songs"
+    ```
 
-```bash
-python dev_server.py
-```
+### ⚡ Generic Method Caller
+Invoke any supported `ytmusicapi` method using either GET or POST.
 
-The landing page is served at `http://localhost:3000` and the API is under `/api/`.
+- **`GET /api/public/ytmusic`**
+  - **Params**: `method`, `args` (JSON array), `kwargs` (JSON object).
+- **`POST /api/public/ytmusic`**
+  ```json
+  {
+    "method": "get_album",
+    "args": ["MPREb_00000000000"],
+    "kwargs": {}
+  }
+  ```
 
-If you want to emulate Vercel's serverless runtime locally, you can still use `vercel dev` (requires `vercel login`).
+#### ✅ Supported Allowlisted Methods:
+`search`, `get_song`, `get_album`, `get_artist`, `get_artist_albums`, `get_artist_singles`, `get_artist_videos`, `get_artist_playlists`, `get_artist_related`, `get_playlist`, `get_watch_playlist`, `get_lyrics`, `get_home`, `get_explore`, `get_new_releases`, `get_charts`, `get_mood_categories`, `get_mood_playlists`.
 
-## Endpoint Reference
+---
 
-### `GET /api/health`
+## 🚀 Deployment (Vercel)
 
-Response:
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FYOUR_USERNAME%2FYOUR_REPO_NAME)
 
-```json
-{"ok": true}
-```
+1. **Fork** this repository.
+2. In your Vercel dashboard, click **"Add New Project"** and import the fork.
+3. Vercel will automatically detect the Python functions in `api/` and the static files in `public/`.
+4. Set the `data-repo` attribute on the `<body>` tag in `public/index.html` to point to your new repo.
 
-### `GET /api/version`
+---
 
-Response:
+## 🧑‍💻 Local Development
 
-```json
-{"app_version": "0.1.0", "ytmusicapi_version": "X.Y.Z", "build_time": "2026-03-12T00:00:00Z"}
-```
+1. **Setup**:
+   ```bash
+   pip install -r requirements.txt
+   ```
+2. **Run**:
+   ```bash
+   python dev_server.py
+   ```
+   - Dashboard: `http://localhost:3000`
+   - API: `http://localhost:3000/api`
 
-`build_time` is populated from the `BUILD_TIME` env var (ISO-8601 string). `app_version` defaults to `0.1.0` but can be overridden with `APP_VERSION`.
+3. **Test**:
+   ```bash
+   pip install -r requirements-dev.txt
+   pytest
+   ```
 
-### `GET /api/search`
+---
 
-Query parameters:
+## 🛡️ Security & CORS
 
-| Name | Type | Required | Default | Notes |
-| --- | --- | --- | --- | --- |
-| `q` | string | Yes | - | Search query |
-| `limit` | int | No | 10 | Clamped between 1 and 25 |
-| `filter` | string | No | null | `songs`, `videos`, `albums`, `artists`, `playlists` |
+- **CORS**: This API is bridge-configured for frontend usage. It allows all origins (`*`) by default.
+- **Safety**: Only "read-only" methods are allowlisted for public endpoints. Methods that modify data (like `create_playlist`) require OAuth, which is currently stubbed in `/api/auth`.
 
-Response:
+---
 
-```json
-{
-  "query": "Oasis",
-  "count": 5,
-  "items": [
-    {"title": "..."}
-  ]
-}
-```
+## 📄 License & Contributing
 
-### `GET /api/public/search`
+Distributed under the **MIT License**. See [LICENSE](LICENSE) for more information. Contributions are welcome! Check [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-Same behavior as `/api/search`, but explicitly scoped to public access. Recommended for new clients.
+---
 
-### `GET /api/ytmusic`
-
-Query parameters:
-
-| Name | Type | Required | Default | Notes |
-| --- | --- | --- | --- | --- |
-| `method` | string | Yes | - | Must be in allowlist |
-| `args` | JSON array | No | `[]` | Positional args for method |
-| `kwargs` | JSON object | No | `{}` | Keyword args for method |
-
-Example:
-
-```bash
-curl "https://YOUR_APP.vercel.app/api/ytmusic?method=get_playlist&args=[\"PLAYLIST_ID\"]"
-```
-
-### `POST /api/ytmusic`
-
-JSON body:
-
-```json
-{
-  "method": "get_song",
-  "args": ["VIDEO_ID"],
-  "kwargs": {}
-}
-```
-
-Response:
-
-```json
-{
-  "method": "get_song",
-  "result": {"videoId": "VIDEO_ID"}
-}
-```
-
-### `GET /api/public/ytmusic`
-
-Same behavior as `/api/ytmusic`, but explicitly scoped to public access. Recommended for new clients.
-
-### `POST /api/public/ytmusic`
-
-Same behavior as `/api/ytmusic`, but explicitly scoped to public access. Recommended for new clients.
-
-### `GET /api/auth/ytmusic`
-
-Reserved for OAuth-protected methods. Returns `401` until OAuth is enabled.
-
-### `POST /api/auth/ytmusic`
-
-Reserved for OAuth-protected methods. Returns `401` until OAuth is enabled.
-
-## Allowed Methods (No Auth)
-
-- `search`
-- `get_song`
-- `get_album`
-- `get_artist`
-- `get_artist_albums`
-- `get_artist_singles`
-- `get_artist_videos`
-- `get_artist_playlists`
-- `get_artist_related`
-- `get_playlist`
-- `get_watch_playlist`
-- `get_lyrics`
-- `get_home`
-- `get_explore`
-- `get_new_releases`
-- `get_charts`
-- `get_mood_categories`
-- `get_mood_playlists`
-
-## Error Format
-
-```json
-{
-  "error": "...",
-  "detail": "...",
-  "allowed_methods": ["..."]
-}
-```
-
-## CORS
-
-This API sets:
-- `Access-Control-Allow-Origin: *`
-- `Access-Control-Allow-Methods: GET, POST, OPTIONS`
-
-## Tests
-
-1. Install dev deps.
-
-```bash
-pip install -r requirements-dev.txt
-```
-
-2. Run tests.
-
-```bash
-pytest
-```
-
-## Limitations
-
-- Unauthenticated only. Library, playlists management, and uploads require OAuth.
-- Results depend on `ytmusicapi` behavior and YouTube Music availability.
-
-## Roadmap
-
-- OAuth support with per-user tokens.
-- Optional API key protection.
-- More examples and SDK snippets.
+<p align="center">
+  Built on the shoulders of giants: <a href="https://github.com/sigma67/ytmusicapi">ytmusicapi</a>.
+</p>
